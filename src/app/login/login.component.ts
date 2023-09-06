@@ -12,26 +12,28 @@ import { Router } from '@angular/router'; // Import Router
 })
 export class LoginComponent implements OnInit {
   
-  loginForm: FormGroup;
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+  });;
   loginMessage: string =" ";
 
-  constructor(private fb: FormBuilder,  private authService: AuthService, private router: Router) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-    });
-  }
+  constructor(private fb: FormBuilder,  private authService: AuthService, private router: Router){
+
+  } 
+    
+  
 
   ngOnInit(): void {
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const email = this.loginForm.value.email;
-      const password = this.loginForm.value.password;
+      let email = this.loginForm.value.email;
+      let password = this.loginForm.value.password;
 
    
-      if (this.authService.authenticate(email, password)) {
+      if (this.authService.authenticate('email', 'password')) {
    
         this.router.navigate(['/next-page']);
       } else {
